@@ -32,7 +32,27 @@
   }
 
   .coordinates {
-    min-width: 250px;
+    .control-group {
+      display: block;
+
+      .controls {
+        display: flex;
+        width: 100%;
+
+        input {
+          width: 100px;
+        }
+      }
+
+      .icon {
+        margin-left: 10px;
+        display: inline-block;
+      }
+    }
+
+    .icon img {
+      max-width: 30px;
+    }
   }
 
   .address + .coordinates {
@@ -102,7 +122,7 @@ input.input-location, div.input-location {
   .ac-wrap {
     box-sizing: border-box;
 
-    .loading-locations {
+    .ac-loading {
       position: absolute;
       top: 7px;
       right: 5px;
@@ -134,6 +154,10 @@ input.input-location, div.input-location {
 
 .location-form-title {
   display: inline-block;
+}
+
+.composer-controls-location {
+  margin: 0 0 5px 5px;
 }
 
 .add-location-btn, .add-location-btn + button {
@@ -637,6 +661,16 @@ input.input-location, div.input-location {
   }
 }
 
+.user-main .location-and-website.map-location-enabled {
+  .user-profile-location {
+    display: none;
+  }
+}
+
 .map-location {
   margin-right: 7px;
+}
+
+.topic-body .user-location {
+  padding: 0 11px 0.25em 11px;
 }

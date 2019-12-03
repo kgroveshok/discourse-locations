@@ -4,6 +4,8 @@
 # authors: Angus McLeod
 # url: https://github.com/angusmcleod/discourse-locations
 
+enabled_site_setting :location_enabled
+
 register_asset 'stylesheets/common/locations.scss'
 register_asset 'stylesheets/desktop/locations.scss', :desktop
 register_asset 'stylesheets/mobile/locations.scss', :mobile
@@ -35,9 +37,18 @@ after_initialize do
   Category.register_custom_field_type('location_map_filter_closed', :boolean)
 
   add_to_class(:category, :location) do
-    if self.custom_fields['location'] &&
-       self.custom_fields['location'].is_a?(String)
-      JSON.parse(self.custom_fields['location'])
+    if self.custom_fields['location']
+      if self.custom_fields['location'].is_a?(String)
+        begin
+          JSON.parse(self.custom_fields['location'])
+        rescue JSON::ParserError => e
+          puts e.message
+        end
+      elsif self.custom_fields['location'].is_a?(Hash)
+        self.custom_fields['location']
+      else
+        nil
+      end
     else
       nil
     end
@@ -57,26 +68,30 @@ after_initialize do
     prepend LocationsSiteSettingExtension
   end
 
-  add_to_serializer(:basic_category, :location) { object.location }
-  add_to_serializer(:basic_category, :location_enabled) { object.custom_fields['location_enabled'] }
-  add_to_serializer(:basic_category, :location_topic_status) { object.custom_fields['location_topic_status'] }
-  add_to_serializer(:basic_category, :location_map_filter_closed) { object.custom_fields['location_map_filter_closed'] }
+  [
+    "location",
+    "location_enabled",
+    "location_topic_status",
+    "location_map_filter_closed"
+  ].each do |key|
+    Site.preloaded_category_custom_fields << key if Site.respond_to? :preloaded_category_custom_fields
+  end
 
   Topic.register_custom_field_type('location', :json)
   Topic.register_custom_field_type('has_geo_location', :boolean)
   add_to_class(:topic, :location) { self.custom_fields['location'] }
 
-  add_to_serializer(:topic_view, :location) { object.topic.location }
+  add_to_serializer(:topic_view, :location, false) { object.topic.location }
   add_to_serializer(:topic_view, :include_location?) { object.topic.location.present? }
 
   TopicList.preloaded_custom_fields << 'location' if TopicList.respond_to? :preloaded_custom_fields
-  add_to_serializer(:topic_list_item, :location) { object.location }
+  add_to_serializer(:topic_list_item, :location, false) { object.location }
   add_to_serializer(:topic_list_item, :include_location?) { object.location.present? }
 
   User.register_custom_field_type('geo_location', :json)
   register_editable_user_custom_field :geo_location if defined? register_editable_user_custom_field
   register_editable_user_custom_field geo_location: {} if defined? register_editable_user_custom_field
-  add_to_serializer(:user, :geo_location) { object.custom_fields['geo_location'] }
+  add_to_serializer(:user, :geo_location, false) { object.custom_fields['geo_location'] }
 
   require_dependency 'directory_item_serializer'
   class ::DirectoryItemSerializer::UserSerializer
@@ -182,7 +197,7 @@ after_initialize do
     @country_codes ||= Locations::Country.codes
   end
 
-  add_to_serializer(:site, :country_codes) { object.country_codes }
+  add_to_serializer(:site, :country_codes, false) { object.country_codes }
 
   require_dependency 'topic_query'
   class ::TopicQuery
@@ -225,7 +240,7 @@ end
 
 DiscourseEvent.on(:custom_wizard_ready) do
   if defined?(CustomWizard) == 'constant' && CustomWizard.class == Module
-    CustomWizard::Field.add_assets('location', 'discourse-locations', ['components', 'helpers', 'lib', 'stylesheets'])
+    CustomWizard::Field.add_assets('location', 'discourse-locations', ['components', 'helpers', 'lib', 'stylesheets', 'templates'])
 
     ## user.geo_location requires location['geo_location'] to be the value
     CustomWizard::Builder.add_field_validator('location') do |field, updater, step_template|

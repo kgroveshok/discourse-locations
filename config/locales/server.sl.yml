@@ -1,6 +1,5 @@
-en:
+sl:
   site_settings:
-    location_enabled: "Enable the locations plugin."
     location_hamburger_menu_map_link: "Enable map menu item in hamburger menu"
     location_input_fields: "Location input fields"
     location_input_fields_enabled: "Enable location input fields"
@@ -35,17 +34,14 @@ en:
     location_users_map_default: "Default to users map when navigating to 'Users'."
     location_add_no_text: "No text on add location buttons."
     location_country_default: "Default country for country input field."
-    location_user_post: "Display a user's location below their username on their posts."
-    location_user_post_format: "Format of location on user's post. A list of geolocation attributes, with an optional index if value is split by ',' e.g. address:3"
-    location_topic_default: "Default location for topic."
 
   location:
     errors:
-      invalid: "Invalid map location"
-      socket: "Your request failed. Please check your internet connection. If the problem persists, contact your site administrator."
-      timeout: "Your request timed out. Please wait 5 seconds and try again. If the problem persists, contact your site administrator."
-      request_denied: "Your request was denied. If the problem persists, contact your site administrator."
-      request_invalid: "Your request was invalid. If the problem persists, contact your site administrator."
-      query_limit: "Geocoding provider query limit reached. Please contact your site administrator."
-      api_key: "Geocoding provider api key invalid. Please contact your site administrator."
-      service_unavailable: "Geocoding provider service unavailable. Please contact your site administrator."
+      invalid: "Neustrezna lokacija"
+      socket: "Vaša zahteva ni uspela. Preverite vašo povezavo. Če se napaka ponovi, kontaktirajte administratorja strani."
+      timeout: "Časovna omejitev vaše zahteve je potekla. Počakajte 5 minut in poskusite ponovno. Če se napaka ponovi, kontaktirajte administratorja strani"
+      request_denied: "Vaša zahteva je bila zavrnjena. Če se napaka ponovi, kontaktirajte administratorja strani."
+      request_invalid: "Vaša zahteva je bila neveljavna. Če se napaka ponovi, kontaktirajte administratorja strani."
+      query_limit: "Dosežena omejitev zahtev na Geocoding ponudniku. Kontaktirajte administratorja strani."
+      api_key: "Napačen api key za Geocoding ponudnika. Kontaktirajte administratorja strani."
+      service_unavailable: "Geocoding ponudnik ni na voljo. Kontaktirajte administratorja strani."

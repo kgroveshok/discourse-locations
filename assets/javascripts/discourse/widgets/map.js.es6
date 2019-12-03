@@ -24,8 +24,6 @@ export default createWidget('map', {
     const topicList = this.attrs.topicList;
     const userList = this.attrs.userList;
 
-    console.log(userList);
-
     let locations = this.state.locations;
 
     if (this.attrs.locations && locations.length !== this.attrs.locations.length) {
@@ -183,9 +181,11 @@ export default createWidget('map', {
     const center = this.attrs.center;
     let boundingbox = null;
 
-    if (category && category.location && category.location.geo_location
-        && category.location.geo_location.boundingbox) {
-      boundingbox = category.location.geo_location.boundingbox;
+    if (category &&
+        category.custom_fields.location &&
+        category.custom_fields.location.geo_location &&
+        category.custom_fields.location.geo_location.boundingbox) {
+      boundingbox = category.custom_fields.location.geo_location.boundingbox;
     }
 
     if (topic && topic.location && topic.location.geo_location
